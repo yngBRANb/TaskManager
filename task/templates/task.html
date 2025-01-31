@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+::backdrop{
+    background-color: rgba(0, 0, 0, 0.6);
+}
+</style>
+
+<dialog class="p-4 mt-5 border-0 bg-dark rounded" id="taskModal">
+    <a class="text-danger" onclick="window.taskModal.close()">X</a>
+    <h3 class="text-center text-light">Ты хочешь закрыть задачу? Уверен?</h3>
+    <div class="text-center mt-5 mb-3">
+        <a class="btn btn-success text-light" onclick="taskStatusChange()">Да</a>
+        <a class="btn btn-danger text-light">Нет</a>
+    </div>
+</dialog>
+
+<div class="row">
+    <div class="mt-5 bg-muted">
+        <div class="task-info">
+            <h1 class="content-justify-center">{{ task.name }}</h1>
+            <p class="text-muted">Дата создания: {{ task.time_register }}</p>
+            <p>{{ task.desc }}</p>
+            <h4>Сделать до: {{ task.date_to }}</h4>
+        </div>
+
+        <div class="task-status-view">
+            {% if task.status == 'active' %}
+                <a onclick="window.taskModal.showModal()" class="btn btn-success text-light text-center p-3"><b>Активен</b></a>
+            {% elif task.status == 'inactive' %}
+                <a class="btn btn-danger text-light text-center p-3"><b>Неактивна</b></a>
+            {% else %}
+                <h3 class="bg-muted text-center p-3 rounded w-50">Неизвестно</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function taskStatusChange() {
+    const taskId = {{ task.id }}; // Получаем ID задачи
+    fetch(`/change-status/${taskId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}', // Добавляем CSRF-токен
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.taskModal.close();
+            location.reload(); // Перезагружаем страницу для обновления
+        } else {
+            alert(data.message);
+        }
+    });
+}
+</script>
+
+{% endblock %}

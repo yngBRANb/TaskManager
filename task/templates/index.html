@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+    {% if tasks %}
+
+    <h1 class="text-center mb-4 mt-4">Активные задачи</h1>
+    <div class="row">
+
+        {% for task in tasks %}
+            <div class="col-4">
+                <div class="card border-1 border-muted p-5">
+                    <h3 class=" ">{{ task.name }}</h3>
+                    <h4 class=" ">{{ task.date_to }}</h4>
+                    <a href="task/{{ task.id }}" class="btn btn-primary mt-2" >Подробнее</a>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+
+    <h1 class="text-center mb-4 mt-4">Активных задач пока нет, но вы можете их создать!</h1>
+
+        <div class="d-flex justify-content-center">
+            <a class="p-3 btn btn-success" href="admin/task/task/add/"><b>Создать задачу<b></a>
+        </div>
+
+    {% endif %}
+
+{% else %}
+    <h1 class="text-center mb-4 mt-4">Вы не вошли в аккаунт</h1>
+
+    <div class="d-flex justify-content-center">
+        <a class="p-3 btn btn-success" href="admin"><b>Войти<b></a>
+    </div>
+{% endif %}
+
+{% endblock %}

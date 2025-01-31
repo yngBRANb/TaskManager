@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 class="text-center mb-4 mt-4">Архив задач</h1>
+<div class="row">
+
+    {% for task in tasks %}
+        <div class="col-4">
+            <div class="card border-1 border-muted p-5">
+                <h3 class=" ">{{ task.name }}</h3>
+                <h4 class=" ">{{ task.date_to }}</h4>
+                <a href="task/{{ task.id }}" class="btn btn-primary" >Подробнее</a>
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
